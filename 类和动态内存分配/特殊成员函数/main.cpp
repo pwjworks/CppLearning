@@ -28,6 +28,11 @@ public:
         os << t.data;
         return os;
     };
+    // 函数参数按值传递会导致复制
+    void testparams(Test t)
+    {
+        cout << "testparams:" << t.data << endl;
+    }
 };
 // NOTE: 静态数据成员在类声名中声名，在包含方法的文件中初始化。
 int Test::num = 0;
@@ -38,5 +43,6 @@ int main()
     cout << a << endl;
     Test b = a;
     cout << b << endl;
+    a.testparams(b);
     return 0;
 }
