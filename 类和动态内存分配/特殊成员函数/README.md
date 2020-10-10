@@ -23,8 +23,6 @@ c++自动提供下面成员函数
 class_name(const Class_name &);
 ```
 
-
-
 ##### 何时
 
 - 新建一个对象并将其初始化为同类现有对象时。
@@ -32,4 +30,25 @@ class_name(const Class_name &);
 
 ##### 默认复制构造函数的功能
 
-- 逐个复制非静态成员
+- 逐个复制非静态成员。
+
+### 赋值运算符
+
+- 将已有的对象赋给另一个对象时，将使用重载的赋值运算符。
+- 初始化对象时不一定使用赋值运算符。
+
+```c++
+StringBad headline1("abc");
+knot=headline1; // 触发赋值运算符
+StringBad metoo=knot; 
+```
+
+- 赋值运算符的隐式实现也是对成员进行逐个复制。
+
+### 在构造函数中使用new时应注意的事项
+
+- 在构造函数中使用new来初始化指针成员，应在析构函数中使用delete
+- new和delete必须互相兼容。
+- 多个构造函数的new应该对应与析构函数的delete
+- delete和delete[]都可以释放空指针nullptr。
+
