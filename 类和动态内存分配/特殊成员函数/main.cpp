@@ -11,14 +11,21 @@ public:
         data = s;
         num++;
     };
+    // ! 复制构造函数
+    Test(const Test& t)
+    {
+        cout << "copied!" << endl;
+        num++;
+        data = t.data;
+    }
     ~Test()
     {
-        num--;
-        cout << "deleted, " << num << " remain.";
+        --num;
+        cout << data << " deleted, " << num << " remain." << endl;
     }
     friend std::ostream& operator<<(std::ostream& os, const Test& t)
     {
-        os << t.num;
+        os << t.data;
         return os;
     };
 };
@@ -28,5 +35,8 @@ int Test::num = 0;
 int main()
 {
     Test a = Test(1);
+    cout << a << endl;
+    Test b = a;
+    cout << b << endl;
     return 0;
 }
