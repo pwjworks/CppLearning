@@ -42,7 +42,7 @@ int main()
     TableTennisPlayer& player3 = rplayer1;
     player3.Name();
 
-    // NOTE 基类指针可用于派生类对象。
+    // NOTE 基类指针可用于派生类对象。在函数形参也是同样的效果。
     TableTennisPlayer player4(rplayer1);
     player4.Name();
     return 0;
