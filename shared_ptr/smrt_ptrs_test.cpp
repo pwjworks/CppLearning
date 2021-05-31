@@ -8,7 +8,7 @@ private:
     std::string str;
 
 public:
-    Report(const std::string &s) : str(s)
+    Report(const std::string& s) : str(s)
     {
         std::cout << "Object created!\n";
     }
