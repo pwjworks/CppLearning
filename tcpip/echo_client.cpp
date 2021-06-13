@@ -40,13 +40,15 @@ int main(int argc, char* argv[]) {
 
         str_len = write(sock, message, strlen(message));
 
+        recv_len = 0;
+
         while (recv_len < str_len) {
-            recv_cnt = read(sock, message, BUF_SIZE - 1);
+            recv_cnt = read(sock, &message[recv_len], BUF_SIZE - 1);
             if (recv_cnt == -1)
                 error_handling("read() error!");
             recv_len += recv_cnt;
         }
-        message[recv_cnt] = 0;
+        message[recv_len] = 0;
         printf("Message from server: %s", message);
     }
     close(sock);
