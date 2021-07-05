@@ -2,7 +2,6 @@
 
 #include <assert.h>
 #include <stdlib.h>
-#include <string.h>
 
 /**
  * @brief 相等断言，json自增1
@@ -52,9 +51,6 @@ static int lept_parse_null(lept_context* c, lept_value* v) {
     return LEPT_PARSE_INVALID_VALUE;
   c->json += 3;
   v->type = LEPT_NULL;
-  if (strlen(c->json) != 0) {
-    return LEPT_PARSE_ROOT_NOT_SINGULAR;
-  }
   return LEPT_PARSE_OK;
 }
 /**
@@ -70,9 +66,6 @@ static int lept_parse_true(lept_context* c, lept_value* v) {
     return LEPT_PARSE_INVALID_VALUE;
   c->json += 3;
   v->type = LEPT_TRUE;
-  if (strlen(c->json) != 0) {
-    return LEPT_PARSE_ROOT_NOT_SINGULAR;
-  }
   return LEPT_PARSE_OK;
 }
 /**
@@ -88,9 +81,6 @@ static int lept_parse_false(lept_context* c, lept_value* v) {
     return LEPT_PARSE_INVALID_VALUE;
   c->json += 4;
   v->type = LEPT_FALSE;
-  if (strlen(c->json) != 0) {
-    return LEPT_PARSE_ROOT_NOT_SINGULAR;
-  }
   return LEPT_PARSE_OK;
 }
 
@@ -124,11 +114,17 @@ static int lept_parse_value(lept_context* c, lept_value* v) {
  */
 int lept_parse(lept_value* v, const char* json) {
   lept_context c;
+  int ret;
   assert(v != NULL);
   c.json = json;
   v->type = LEPT_NULL;
   lept_parse_whitespace(&c);
-  return lept_parse_value(&c, v);
+  if ((ret = lept_parse_value(&c, v)) == LEPT_PARSE_OK) {
+    lept_parse_whitespace(&c);
+    if (*c.json != '\0')
+      ret = LEPT_PARSE_ROOT_NOT_SINGULAR;
+  }
+  return ret;
 }
 /**
  * @brief 获取JSON类型结果
