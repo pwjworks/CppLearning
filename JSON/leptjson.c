@@ -93,6 +93,9 @@ static int lept_parse_number(lept_context* c, lept_value* v) {
     if (!ISDIGIT(*p)) return LEPT_PARSE_INVALID_VALUE;
     for (p++; ISDIGIT(*p); p++);
   }
+  if (*p != '\0') {
+    return LEPT_PARSE_ROOT_NOT_SINGULAR;
+  }
   errno = 0;
   v->n = strtod(c->json, NULL);
   if (errno == ERANGE && (v->n == HUGE_VAL || v->n == -HUGE_VAL))
