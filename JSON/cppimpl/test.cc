@@ -21,6 +21,14 @@ inline void EXPECT_EQ_INT(int expect, int actual) {
   EXPECT_EQ_BASE((expect) == (actual), expect, actual);
 }
 
+inline void TEST_ERROR(int error, char* json) {
+  using namespace LEPTJSON;
+  std::shared_ptr<lept_value> value(new lept_value(lept_type::type::LEPT_FALSE));
+  std::shared_ptr<lept_parser> parser(new lept_parser(value));
+  EXPECT_EQ_INT(error, parser->parse(json));
+  EXPECT_EQ_INT(lept_type::type::LEPT_NULL, parser->getType());
+}
+
 /**
  * @brief 爬取null字符串
  *
