@@ -32,7 +32,8 @@ namespace LEPTJSON {
       LEPT_PARSE_OK = 0,
       LEPT_PARSE_EXPECT_VALUE,
       LEPT_PARSE_INVALID_VALUE,
-      LEPT_PARSE_ROOT_NOT_SINGULAR
+      LEPT_PARSE_ROOT_NOT_SINGULAR,
+      LEPT_PARSE_NUMBER_TOO_BIG
     };
   };
   /**
@@ -42,6 +43,7 @@ namespace LEPTJSON {
   class lept_value {
   private:
     lept_type::type type;
+    double n;
   public:
     typedef std::shared_ptr<lept_value> ptr;
     lept_value(lept_type::type _type) :type(_type) {
@@ -53,6 +55,8 @@ namespace LEPTJSON {
      */
     lept_type::type getType() const { return type; };
     void setType(lept_type::type _type) { type = _type; };
+    double getN()const { return n; };
+    void setN(double _n) { n = _n; };
   };
 
   class lept_parser {
@@ -72,6 +76,23 @@ namespace LEPTJSON {
       json++;
     };
     /**
+     * @brief 判断数字是否在0-9
+     *
+     * @param ch
+     * @return true
+     * @return false
+     */
+    bool ISDIGIT(char ch) {
+      return ch >= '0' && ch <= '9';
+    }
+    /**
+     * @brief 判断数字是否在1-9
+     *
+     */
+    bool ISDIGIT1TO9(char ch) {
+      return ch >= '1' && ch <= '9';
+    }
+    /**
      * @brief 爬取执行函数，执行顺序：先假设结果为LEPT_NULL，lept_parse_whitespace去除空格，lept_parse_value爬取结果
      *
      * @param json JSON字符串
@@ -81,9 +102,9 @@ namespace LEPTJSON {
     /**
      * @brief 返回解析结果类型
      *
-     * @return lept_type::type 解析结果类型
+     * @return lept_value::ptr 解析结果类型类
      */
-    lept_type::type getType() { return value->getType(); };
+    lept_value::ptr getValue() { return value; };
 
     /**
      * @brief 首先检测第一个字符是否为‘n’，再检测其他字符，不等于null返回LEPT_PARSE_INVALID_VALUE
@@ -111,6 +132,12 @@ namespace LEPTJSON {
      */
     int lept_parse_false();
     /**
+     * @brief 提取JSON中的数字
+     *
+     * @return int 解析是否成功
+     */
+    int lept_parse_number();
+    /**
      * @brief 爬取字符串内容
      *
      * @return int JSON类型结果
@@ -120,7 +147,6 @@ namespace LEPTJSON {
      * @brief Construct a new lept parser object
      *
      * @param _value
-     * @param _json
      */
     lept_parser(lept_value::ptr _value);
     /**
